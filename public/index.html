@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NazhaDesk - سیستەمی کۆنترۆڵی دووربەدەست (AnyDesk Clone)</title>
+    <!-- Google Fonts for Modern UI and Kurdish Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-light">
+    <!-- Top System Window Bar -->
+    <header class="app-header">
+        <div class="tabs-container">
+            <div class="tab active" id="mainTab">
+                <span class="tab-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2L2 22h20L12 2zm0 3.8L18.5 19H5.5L12 5.8z"/></svg>
+                </span>
+                <span class="tab-title">NazhaDesk</span>
+            </div>
+            <div class="tab" id="viewerTab" style="display: none;">
+                <span class="tab-icon">💻</span>
+                <span class="tab-title" id="remoteSessionTitle">Session</span>
+                <button class="tab-close" id="closeSessionTabBtn" title="داخستنی دانیشتن">×</button>
+            </div>
+            <button class="tab-new" title="دانیشتنی نوێ">+</button>
+        </div>
+
+        <div class="header-actions">
+            <button class="server-toggle-btn" id="serverSettingsBtn" title="ڕێکخستنی سێرڤەر و پەیوەندی">⚙ سێرڤەر (Server)</button>
+            <button class="lang-toggle-btn" id="langToggleBtn" title="گۆڕینی زمان">🌐 English</button>
+            <div class="status-indicator online" id="globalStatus" title="ئامادەیە بۆ پەیوەندی"></div>
+            <button class="theme-toggle-btn" id="themeToggleBtn" title="دۆخی تاریک/ڕووناک">🌓</button>
+        </div>
+    </header>
+
+    <!-- Top Red AnyDesk Banner with Search / Remote Address Bar -->
+    <div class="red-banner">
+        <div class="remote-address-bar">
+            <span class="status-dot"></span>
+            <input type="text" id="remoteAddressInput" placeholder="ناونیشانی شوێنی مەبەست بنووسە (Enter Remote Address)..." autocomplete="off">
+            <button class="connect-btn" id="connectBtn" title="پەیوەندیکردن">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+        <div class="banner-right">
+            <span class="badge-free" id="licenseLabel">وەشانی تایبەت (Private Full Control)</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="main-content" id="mainDashboard">
+        <!-- Your Address Hero Section -->
+        <section class="your-address-section">
+            <div class="address-wrapper">
+                <span class="address-label" id="yourAddressLabel">ناونیشانی ئەم کۆمپیوتەرە (Your Address):</span>
+                <div class="address-display">
+                    <span class="address-number" id="myAddressText">1 263 108 267</span>
+                    <button class="btn-copy" id="copyAddressBtn" title="کۆپیکردنی ئایدی">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                    <button class="btn-security" id="securityBtn" title="ڕێکخستنی پاسۆرد و پاراستن">🔒</button>
+                    <button class="btn-invite" id="inviteBtn">✉ بانگهێشتکردن (Invite)</button>
+                </div>
+                <div class="address-subinfo" id="onlineLinkBadge" style="margin-top: 10px; font-size: 13px; font-weight: 600; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 6px 14px; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981;"></span>
+                    <span>لینکی ئۆنلاین بۆ هەموو ئینتەرنێت: <a href="https://choice-tyler-horizon-ghz.trycloudflare.com" target="_blank" style="color: inherit; text-decoration: underline;">https://choice-tyler-horizon-ghz.trycloudflare.com</a></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Sub-Tabs -->
+        <nav class="subtabs-nav">
+            <button class="subtab-btn active" data-target="news" id="tabNews">سەرەکی و هەواڵ</button>
+            <button class="subtab-btn" data-target="favorites" id="tabFavorites">دڵخوازەکان (Favorites)</button>
+            <button class="subtab-btn" data-target="recent" id="tabRecent">شوێنە بەستراوەکان (Recent Sessions)</button>
+            <button class="subtab-btn" data-target="discovered" id="tabDiscovered">دۆزراوەکان لە تۆڕ (Discovered)</button>
+        </nav>
+
+        <!-- Feature Action Cards -->
+        <section class="feature-cards">
+            <div class="feature-card card-cyan">
+                <div class="card-header">
+                    <h4>NazhaDesk نوێ</h4>
+                    <span class="badge-new">v1.0</span>
+                </div>
+                <p>سیستەمی تایبەتی خۆتە بە خێرایی بەرز و سێرڤەری لۆکاڵ بەبێ هیچ سنووردارکردنێک.</p>
+                <button class="card-btn" id="testHostBtn">دەستپێکردنی هاوبەشکردنی شاشە (Host Screen)</button>
+            </div>
+
+            <div class="feature-card card-red">
+                <h4>دۆخی سیستەم (Status)</h4>
+                <p id="systemStatusText">سیستەم ئامادەیە بۆ وەرگرتن و ناردنی دانیشتن.</p>
+                <div class="toggle-row">
+                    <label>
+                        <input type="checkbox" id="permControl" checked> ڕێگەدان بە ماوس و کیبۆرد
+                    </label>
+                </div>
+            </div>
+
+            <div class="feature-card card-blue">
+                <h4>دۆزینەوە لە تۆڕ (Discovery)</h4>
+                <p>ئامێرە ئۆنلاینەکانی تر لەسەر سێرڤەر بە شێوەی خۆکارانە دەدۆزرێنەوە.</p>
+                <span class="online-count" id="onlineCountBadge">1 ئامێر لە تۆڕدایە</span>
+            </div>
+
+            <div class="feature-card card-orange">
+                <h4>تۆمارکردنی شاشە (Record)</h4>
+                <p>دەتوانیت تەواوی کردارەکانی سەر دیسکتۆب ڕیکۆرد بکەیت بۆ پاراستنی متمانە.</p>
+                <div class="quick-icons">
+                    <span>🖥</span>
+                    <span>🔊</span>
+                    <span>🎙</span>
+                    <span class="rec-dot">⏺</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Sessions Section (Visual Grid like AnyDesk) -->
+        <section class="sessions-section">
+            <div class="section-title-row">
+                <h3 id="recentSessionsTitle">شوێنەکانی دوایی (Recent Sessions)</h3>
+                <button class="btn-refresh" id="refreshSessionsBtn">🔄 نوێکردنەوە</button>
+            </div>
+
+            <div class="sessions-grid" id="sessionsGrid">
+                <!-- Dynamically populated or default AnyDesk-style cards -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Full Remote Desktop Viewer Screen -->
+    <div class="remote-viewer-container" id="remoteViewerContainer" style="display: none;">
+        <!-- Top Floating Control Toolbar -->
+        <div class="viewer-toolbar" id="viewerToolbar">
+            <div class="toolbar-drag-handle">NazhaDesk Remote</div>
+            <div class="toolbar-stats">
+                <span class="stat-pill" id="statLatency">⚡ 12 ms</span>
+                <span class="stat-pill" id="statFps">60 FPS</span>
+                <span class="stat-pill" id="statQuality">1080p HD</span>
+            </div>
+            <div class="toolbar-actions">
+                <button class="tool-btn" id="btnCtrlAltDel" title="ناردنی Ctrl+Alt+Del">⌨ CAD</button>
+                <button class="tool-btn" id="btnSendText" title="ناردنی دەق بۆ دیسکتۆب">📋 ناردنی دەق</button>
+                <button class="tool-btn" id="btnToggleFullscreen" title="پڕکردنی شاشە">⛶ پڕکردنەوە</button>
+                <button class="tool-btn danger" id="btnDisconnectSession" title="پچڕاندنی پەیوەندی">✕ دابڕان</button>
+            </div>
+        </div>
+
+        <!-- Video Canvas for Displaying Remote Screen -->
+        <div class="canvas-viewport" id="canvasViewport">
+            <video id="remoteVideo" autoplay playsinline style="display: none;"></video>
+            <canvas id="remoteCanvas"></canvas>
+            <div class="remote-cursor" id="virtualCursor"></div>
+        </div>
+    </div>
+
+    <!-- Incoming Connection Dialog Modal (AnyDesk Style) -->
+    <div class="modal-overlay" id="incomingModal" style="display: none;">
+        <div class="modal-card incoming-card">
+            <div class="modal-header">
+                <div class="avatar-ring">💻</div>
+                <div class="caller-info">
+                    <h3 id="incomingTitle">داواکاری پەیوەندی هاتوو!</h3>
+                    <p id="incomingCallerId">ئایدی: 1 964 360 927</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p>ئەم بەکارهێنەرە دەیەوێت شاشەکەت ببینێت و کۆنترۆڵی ماوس و کیبۆردت بکات.</p>
+                <div class="permissions-box">
+                    <label><input type="checkbox" id="modalPermMouse" checked> کۆنترۆڵی ماوس و کیبۆرد (Mouse & Keyboard)</label>
+                    <label><input type="checkbox" id="modalPermAudio" checked> گواستنەوەی دەنگ (Audio Transmission)</label>
+                    <label><input type="checkbox" id="modalPermClipboard" checked> بەشکردنی کلیپبۆرد (Clipboard Sync)</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn accept" id="acceptCallBtn">✔ قبوڵکردن (Accept)</button>
+                <button class="modal-btn reject" id="rejectCallBtn">✖ ڕەتکردنەوە (Dismiss)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden audio element for connection rings -->
+    <audio id="bellAudio" preload="auto"></audio>
+
+    <script src="peerjs.min.js?v=3"></script>
+    <script src="app.js?v=3"></script>
+</body>
+</html>
